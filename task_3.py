@@ -13,7 +13,7 @@ bot = telebot.TeleBot(TOKEN)
 
 user_dict = {}
 
-
+#Todo ИНлайн клавиатура
 class User:
     def __init__(self, requested_number):
         self.requested_number = requested_number
