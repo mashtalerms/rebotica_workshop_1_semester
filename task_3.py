@@ -13,7 +13,7 @@ bot = telebot.TeleBot(TOKEN)
 
 user_dict = {}
 
-#Todo ИНлайн клавиатура
+
 class User:
     def __init__(self, requested_number):
         self.requested_number = requested_number
@@ -34,33 +34,27 @@ def choose_math_action(message):
         requested_number = int(message.text)
         user = User(requested_number)
         user_dict["user"] = user
-        keyboard = types.InlineKeyboardMarkup()
-        button_sin = types.KeyboardButton("sin")
-        button_cos = types.KeyboardButton("cos")
-        button_tan = types.KeyboardButton("tan")
+        keyboard = types.InlineKeyboardMarkup(row_width=1)
+        button_sin = types.InlineKeyboardButton("sin", callback_data='sin')
+        button_cos = types.InlineKeyboardButton("cos", callback_data='cos')
+        button_tan = types.InlineKeyboardButton("tan", callback_data='tan')
         keyboard.add(button_sin, button_cos, button_tan)
-        msg = bot.reply_to(message, text="Choose math action", reply_markup=keyboard)
-        bot.register_next_step_handler(msg, doing_math)
+        bot.send_message(message.chat.id, 'Choose math action', reply_markup=keyboard)
     except Exception as e:
-        bot.reply_to(message, 'oooops')
+        bot.reply_to(message, f'oooops {e}')
 
 
-def doing_math(message):
+@bot.callback_query_handler(func=lambda message: True)
+def logic_inline(call):
     result = None
-    if message.text == "sin":
+    if call.data == 'sin':
         result = math.sin(user_dict["user"].requested_number)
-    elif message.text == "cos":
+    elif call.data == 'cos':
         result = math.cos(user_dict["user"].requested_number)
-    elif message.text == "tan":
+    elif call.data == 'tan':
         result = math.tan(user_dict["user"].requested_number)
-
     result = str(result)
-    bot.reply_to(message, result)
+    bot.send_message(call.message.chat.id, result)
 
-
-bot.enable_save_next_step_handlers(delay=2)
-
-bot.load_next_step_handlers()
 
 bot.infinity_polling()
-
