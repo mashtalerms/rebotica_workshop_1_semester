@@ -23,7 +23,7 @@ class User:
 def send_welcome(message):
     msg = bot.reply_to(message, """\
         Hi there, I am a math bot.
-        What's your number?
+        What's your degrees?
     """)
 
     bot.register_next_step_handler(msg, choose_math_action)
@@ -31,7 +31,8 @@ def send_welcome(message):
 
 def choose_math_action(message):
     try:
-        requested_number = int(message.text)
+        radians = math.radians(int(message.text))
+        requested_number = radians
         user = User(requested_number)
         user_dict["user"] = user
         keyboard = types.InlineKeyboardMarkup(row_width=1)

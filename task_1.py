@@ -3,6 +3,7 @@
 # В словаре должно быть 3 ученика, у каждого ученика должно быть 4 предмета и 5 оценок. Пользователю должен
 # предоставляться выбор (1 - вывод всех оценок по предмету у ученика, 2 - вывод среднего балла по этому предмету).
 # Реализовать каждый из вариантов.
+from typing import Dict
 
 data = {
     "Ivanov": {
@@ -28,28 +29,42 @@ data = {
 
 def main():
 
-    def get_student_rating(surname: str, subject: str) -> str:
+    def get_student_rating() -> dict[str, str] | dict[str, str] | str:
 
-        user_input: str = input(
+        print(f"Our students - {[x for x in data]}")
+        print(f"Our subjects - {[x for x in data['Ivanov']]}")
+
+        student: str = input(
+            "Choose student, type in his sirname\n"
+        )
+        if student not in data.keys():
+            return {"Error": "you typed something wrong in surname"}
+
+        subject: str = input(
+            "Choose subject, type in any subject\n"
+        )
+        if subject not in data["Petrov"]:
+            return {"Error": "you typed something wrong in subject"}
+
+        user_input_info: str = input(
             "What do you want to know? All grades or average of them?\n HINT: type only 'all' or 'average'\n"
             " EXAMPLE: all\n"
         )
-        prefix = f"Student - {surname}, subject - {subject}\n"
-        result = data[surname][subject]
+        if user_input_info not in ["all", "average"]:
+            return {"Error": "you typed something wrong in action"}
 
-        if user_input.lower() == "all":
+        prefix = f"Student - {student}, subject - {subject}\n"
+        result = data[student][subject]
+
+        if user_input_info.lower() == "all":
             result = result
 
-        elif user_input.lower() == "average":
+        elif user_input_info.lower() == "average":
             result = sum(result) / len(result)
-
-        else:
-            result = {"Error": "you typed something wrong"}
 
         return prefix + str(result)
 
-    #TODO проверять здесь
-    print(get_student_rating("Sidorov", "English"))
+    print(get_student_rating())
 
 
 if __name__ == "__main__":
